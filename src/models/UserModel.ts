@@ -1,37 +1,14 @@
 import { randomUUID } from "crypto";
-import { IUser } from "../controllers/interfaces/UserInterface";
+import mongoose from "mongoose";
 
-const databasePassword = 'turma1025Password';
+const Schema = mongoose.Schema;
 
-export class UserModel {
-    private users: IUser[];
+export const UserSchema = new Schema({
+    id: { type: String, default: randomUUID()},
+    name: String,
+    surname: String,
+    email: String,
 
-    constructor() {
-        this.users = [];
-    }
+});
 
-    public getUser(id: string): IUser | undefined {
-        if (!this.users.length) {
-            throw new Error('Não existem usuários cadastrados.');
-        }
-
-        return this.users.find((user: IUser) => user.id === id);
-    }
-
-    public createUser(name: string, surname: string, email: string): IUser {
-        const user: IUser = {
-            id: randomUUID(),
-            name,
-            surname,
-            email,
-        };
-
-        this.users.push(user);
-
-        return user;
-    }
-
-    public getAllUsers(): IUser[] {
-        return this.users;
-    }
-}
+export const UserModel = mongoose.model("User", UserSchema);
