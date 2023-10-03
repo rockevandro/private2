@@ -1,24 +1,22 @@
-import express, { Request, Response } from "express";
-import mongoose from "mongoose";
+import * as dotenv from "dotenv";
+import express from "express";
+import userRoutes from './routes/UserRoutes';
+import { MongoDBConnection } from "./config/MongoDbConnection";
+
+dotenv.config();
 
 const app = express();
 const port = 3000;
 
-app.get("/", (req: Request, res: Response) =>
-{
- res.send("Olá, mundo! Servidor express.js com TypeScript.");
-});
+app.use(express.json());
+app.use(userRoutes);
 
 (async function () {
-    try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/db');
-        // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
-        console.log("Connected to mongodb");
-    } catch (error) {
-        console.log(error);
-    }
+    const mongooseConnection = new MongoDBConnection();
 
-    app.listen(port, async () => {
-        console.log(`Servidor Express está ouvindo na porta ${port}, acesse: http://localhost:${port}`)
+    await mongooseConnection.connect();
+
+    app.listen(port, () => {
+        console.log(`Servidor Express está ouvindo na porta ${port}, acesse: http://localhost:${port}`);
     });
 })();
