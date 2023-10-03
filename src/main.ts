@@ -20,4 +20,3 @@ app.use(userRoutes);
         console.log(`Servidor Express está ouvindo na porta ${port}, acesse: http://localhost:${port}`);
     });
 })();
-
